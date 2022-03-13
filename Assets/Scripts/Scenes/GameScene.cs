@@ -4,26 +4,7 @@ using UnityEngine;
 
 public class GameScene : BaseScene
 {
-    class Test
-    {
-        public int Id = 0;
-    }
-    class CoroutineTest : IEnumerable
-    {
-        public IEnumerator GetEnumerator()
-        {
-            for (int i = 0; i < 1000000; i++)
-            {
-                if (i % 10000 == 0)
-                    yield return null;
-            }
-            yield return new Test() { Id = 1};
-            yield return null;
-            yield return new Test() { Id = 2};
-            yield return new Test() { Id = 3};
-            yield return new Test() { Id = 4 };
-        }
-    }
+    Coroutine co;
     protected override void Init()
     {
         base.Init();
@@ -32,13 +13,27 @@ public class GameScene : BaseScene
 
         Managers.UI.ShowSceneUI<UI_Inven>();
 
-        CoroutineTest test = new CoroutineTest();
-
-        foreach (System.Object t in test)
+        co = StartCoroutine("ExplodeAfterSeconds", 4.0f);
+        StartCoroutine("CoStopExplode", 2.0f);
+    }
+    IEnumerator CoStopExplode(float seconds)
+    {
+        Debug.Log("Stop Enter");
+        yield return new WaitForSeconds(seconds);
+        Debug.Log("Stop Execute!!");
+        if (co != null)
         {
-            Test value = (Test)t;
-            Debug.Log(value.Id);
+            StopCoroutine(co);
+            co = null;
         }
+    }
+
+    IEnumerator ExplodeAfterSeconds(float seconds)
+    {
+        Debug.Log("Explode Enter");
+        yield return new WaitForSeconds(seconds);
+        Debug.Log("Explode Execute!!");
+        co = null;
     }
     public override void Clear()
     {
