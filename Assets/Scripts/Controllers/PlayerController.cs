@@ -34,18 +34,15 @@ public class PlayerController : MonoBehaviour
             switch (_state)
             {
                 case PlayerState.Die:
-                    anim.SetBool("attack", false);
                     break;
                 case PlayerState.Idle:
-                    anim.SetFloat("speed", 0);
-                    anim.SetBool("attack", false);
+                    anim.CrossFade("WAIT", 0.5f);
                     break;
                 case PlayerState.Moving:
-                    anim.SetFloat("speed", _stat.MoveSpeed);
-                    anim.SetBool("attack", false);
+                    anim.CrossFade("RUN", 0.1f);
                     break;
                 case PlayerState.Skill:
-                    anim.SetBool("attack", true);
+                    anim.CrossFade("ATTACK", 0.1f, -1, 0);
                     break;
             }
         }
@@ -114,6 +111,12 @@ public class PlayerController : MonoBehaviour
 
     void UpdateSkill()
     {
+        if (_lockTarget != null)
+        {
+            Vector3 dir = _lockTarget.transform.position - transform.position;
+            Quaternion quat = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Lerp(transform.rotation, quat, 20 * Time.deltaTime);
+        }
     }
 
     void OnHitEvent()
@@ -156,6 +159,7 @@ public class PlayerController : MonoBehaviour
 
 
     bool _stopSkill = false;
+
     void OnMouseEvent(Define.MouseEvent evt)
     {
         switch (State)
