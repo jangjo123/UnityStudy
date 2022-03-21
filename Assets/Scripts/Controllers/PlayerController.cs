@@ -56,6 +56,8 @@ public class PlayerController : MonoBehaviour
 
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
+
+        Managers.UI.MakeWorldSpaceUI<UI_HPBar>(transform);
     }
 
     void UpdateDie()
@@ -68,6 +70,7 @@ public class PlayerController : MonoBehaviour
         // 몬스터가 내 사정거리보다 가까우면 공격
         if (_lockTarget != null)
         {
+            _destPos = _lockTarget.transform.position;
             float distance = (_destPos - transform.position).magnitude;
             if (distance <= 1)
             {
@@ -122,6 +125,16 @@ public class PlayerController : MonoBehaviour
     void OnHitEvent()
     {
         Debug.Log("OnHitEvent");
+
+        if (_lockTarget != null)
+        {
+            // TODO
+            Stat targetStat = _lockTarget.GetComponent<Stat>();
+            Stat myStat = gameObject.GetComponent<PlayerStat>();
+            int damage = Mathf.Max(0, myStat.Attack - targetStat.Defense);
+            Debug.Log(damage);
+            targetStat.Hp -= damage;
+        }
 
         // TODO
         if (_stopSkill)
@@ -205,7 +218,7 @@ public class PlayerController : MonoBehaviour
                 break;
             case Define.MouseEvent.Press:
                 {
-                    if (_lockTarget != null && raycastHit)
+                    if (_lockTarget == null && raycastHit)
                         _destPos = hit.point;
                 }
                 break;
