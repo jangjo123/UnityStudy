@@ -119,22 +119,22 @@ public class PlayerController : CreatureController
 		// 스킬 상태로 갈지 확인
 		if (Input.GetKey(KeyCode.J))
 		{
-			//GameObject monster = Managers.Resource.Instantiate("Creature/Monster");
-			//monster.name = $"Monster";
+            GameObject monster = Managers.Resource.Instantiate("Creature/Monster");
+            monster.name = $"Monster";
 
-			//// 랜덤 위치 스폰 (일단 겹쳐도 OK)
-			//Vector3Int pos = new Vector3Int()
-			//{
-			//	x = Random.Range(-20, 20),
-			//	y = Random.Range(-10, 10)
-			//};
+            // 랜덤 위치 스폰 (일단 겹쳐도 OK)
+            Vector3Int pos = new Vector3Int()
+            {
+                x = Random.Range(-20, 20),
+                y = Random.Range(-10, 10)
+            };
 
-			//MonsterController mc = monster.GetComponent<MonsterController>();
-			//mc.CellPos = pos;
+            MonsterController mc = monster.GetComponent<MonsterController>();
+            mc.CellPos = pos;
 
-			//Managers.Object.Add(monster);
-				
-			State = CreatureState.Skill;
+            Managers.Object.Add(monster);
+
+            State = CreatureState.Skill;
 			//_coSkill = StartCoroutine("CoStartPunch");
 			_coSkill = StartCoroutine("CoStartShootArrow");
 		}
@@ -199,6 +199,7 @@ public class PlayerController : CreatureController
 
     public override void OnDamaged()
     {
+		Managers.Object.Remove(gameObject);
 		Destroy(gameObject);
     }
 }

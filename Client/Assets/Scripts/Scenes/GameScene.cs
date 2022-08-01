@@ -52,8 +52,17 @@ public class GameScene : BaseScene
 
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.R))
-        //    SceneManager.LoadScene("Lobby");
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            GameObject player = Managers.Resource.Instantiate("Creature/Player");
+            player.name = "Player";
+            Managers.Object.Add(player);
+            Score = 0;
+        }
+            
+        //SceneManager.LoadScene("Lobby");
+
+       
     }
 
     public override void Clear()
